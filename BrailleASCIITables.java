@@ -73,7 +73,9 @@ public class BrailleASCIITables {
       System.err.println("Braille to unicode file not found");
     }//try
 
-    return tree_unicode.get(bits);
+    char chara = (char) Integer.parseInt(tree_unicode.get(bits), 16);
+
+    return Character.toString(chara);
   }//toUnicode
 
 }//BrailleASCIITables

@@ -40,14 +40,13 @@ public class BrailleASCII {
       for(int i = 0; i < source.length(); i++){
         str = str + BrailleASCIITables.toBraille(source.charAt(i));
       }//for
-      pen.println(str);
       String unicode = "";
       //from bits to unicode
       for(int i = 1; i <= (str.length() / 6); i++){
         unicode = BrailleASCIITables.toUnicode(str.substring((i - 1) * 6, (i * 6)));
-        pen.println(unicode);
+        pen.print(unicode);
       }
-      //pen.println(unicode);
+      pen.println();
       
     }//if
     
