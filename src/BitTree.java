@@ -6,9 +6,14 @@ import java.io.InputStreamReader;
 import java.io.PrintWriter;
 
 /**
- * <Description>
+ * Implements a BitTree where 0's indicate travsering to the left node and 1's indicate
+ * traversing to the right. Only the node at the end of each branch contains a value.
  *
  * @author Maria Rodriguez
+ * CSC207
+ * November 16, 2023
+ * 
+ * AWcknowledgements: the dump() method was taken from class 31 lab "Binary search trees"
  */
 public class BitTree {
     
@@ -17,10 +22,13 @@ public class BitTree {
  * --------------------------
  */
 
+  //the size of the tree (dependant on the length of the string of bits)
   int size;
 
+  //creates the starter root
   BitTreeNode root;
 
+  //the node we use to traverse the tree
   BitTreeNode current;
 
 
@@ -29,14 +37,13 @@ public class BitTree {
   --------------------------
   */
 
+  //Creates a BitTree if size n
   BitTree(int n){
     //store mappinhgs of strings of n bits to strings
     size = n;
     root = new BitTreeNode();
     current = root;
-  }
-
-
+  }//BitTree
 
 /*------------------------
 * methods
@@ -55,19 +62,27 @@ public class BitTree {
     if(bits.length() != size){
       throw new Exception("Invalid string, please input a string of " + size + " length. \n");
     }//if
-    //if(checkBits(bits) == false){
-    //  throw new Exception("String bits must include 1s and 0s. \n");
-    //}//if
+    if(checkBits(bits) == false){
+      throw new Exception("String bits must include 1s and 0s. \n");
+    }//if
 
+    //sets current to the start of the tree
     current = root;
 
     for(int i = 0; i < (bits.length()); i++){
+      //if 0, move to the left
       if(bits.charAt(i) == '0'){
+
+        //if the left is empty, create a new node
         if(current.left == null){
           current.left = new BitTreeNode();
         }//if
+
+        //move to the left
         current = current.left;
+
       } else if(bits.charAt(i) == '1'){
+        //if 1, move to the right, make a new node if it's empty
         if(current.right == null){
           current.right = new BitTreeNode();
         }//if
@@ -89,13 +104,13 @@ public class BitTree {
     if(bits.length() != size){
       throw new Exception("Invalid string, please input a string of " + size + " length. \n");
     }//if
-    //if(checkBits(bits) == false){
-    //  throw new Exception("String bits must include 1s and 0s. \n");
-    //}//if
+    if(checkBits(bits) == false){
+      throw new Exception("String bits must include 1s and 0s. \n");
+    }//if
 
     current = root;
 
-    //if 0, get the left value, if 1 get the right value
+    //if 0, move left, if 1 move right
     for(int i = 0; i < (bits.length()); i++){
       if(bits.charAt(i) == '0'){
         current = current.left;
@@ -110,25 +125,32 @@ public class BitTree {
   }//get
 
   /*
-   * dump()
-   * prints out the contents of the tree in CVS format
+   * dump(PrintWriter pen, Node node, String indent)
+   * recursively prints out the contents of the tree in CVS format
    */
   void dump(PrintWriter pen, BitTreeNode node, String indent) {
 
+    //if both left and right have nodes, rcursively call dump on both sides
     if((node.left != null) && (node.right != null)){
       dump(pen, node.left, indent + "0");
       dump(pen, node.right, indent + "1");
-    } else if(node.left != null){
+    } else if(node.left != null){ //if the left is empty, call dump on the right
       dump(pen, node.left, indent + "0");
-    } else if(node.right != null){
+    } else if(node.right != null){ //if the right is empty, call dump on the left
       dump(pen, node.right, indent + "1");
-    }
+    }//if
 
+    //once we reach the end on the branch, return the bits and the value
     if((node.left == null) && (node.right == null)){
       pen.println(indent + "," + node.val);
     }
   } // dump
 
+  /*
+   * dump(PrintWriter pen)
+   * 
+   * calls the recursive dump()
+   */
   public void dump(PrintWriter pen) {
     dump(pen, root, "");
   } // dump(PrintWriter)
@@ -144,20 +166,20 @@ public class BitTree {
     String line;
 
     while((line = bufferedReader.readLine()) != null){
-       // Split the line into bitTree path and character equivalent
-       String[] parts = line.split(",");
-       if (parts.length == 2) {
-           String bits = parts[0];
-           String value = parts[1];
-           try {
-            set(bits, value);
-          } catch (Exception e) {
-            e.printStackTrace();
-          }
-       } else {
-           System.out.println("Invalid line format: " + line);
-       }
-    }
+      // Split the line into bitTree path and character equivalent
+      String[] parts = line.split(",");
+      if (parts.length == 2) {
+        String bits = parts[0];
+        String value = parts[1];
+        try {
+          set(bits, value);
+        } catch (Exception e) {
+          e.printStackTrace();
+        }//try
+      } else {
+        System.out.println("Invalid line format: " + line);
+      }//if
+    }//while
   }//load
 
 /*------------------
@@ -171,31 +193,13 @@ public class BitTree {
   */
   public boolean checkBits(String bits){
     for(int i = 0; i < (bits.length()-1); i++){
-      if(bits.charAt(i) != '0' || bits.charAt(i) != '1'){
+      if((bits.charAt(i) != '0') || (bits.charAt(i) != '1')){
         return false;
       }//if
     }//for
 
     return true;
   }//checkBits
-
-  /*
-   * traverse(String bits)
-   */
-  public void traverse(String bits){
-    current = root;
-    //if(checkBits(bits)){
-      for(int i = 0; i < (bits.length()); i++){
-        if(bits.charAt(i) == '0'){
-          current.left = new BitTreeNode();
-          current = current.left;
-        } else if(bits.charAt(i) == '1'){
-          current.right = new BitTreeNode();
-          current = current.right;
-        }//if
-      }//for
-    //}//if checkBits
-  }//traverse
 
 /*---------------------------
  * Inner class
@@ -208,8 +212,13 @@ public class BitTree {
      * --------------
      */
 
+    //holds the value at the end of the branch
     String val;
+
+    //left node
     BitTreeNode left;
+
+    //right node
     BitTreeNode right;
 
     /*---------------
@@ -226,4 +235,4 @@ public class BitTree {
   }//bitTreeNode'
 
 
-}
+}//BitTree
