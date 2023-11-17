@@ -1,4 +1,4 @@
-package src;
+
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
@@ -62,10 +62,7 @@ public class BitTree {
     if(bits.length() != size){
       throw new Exception("Invalid string, please input a string of " + size + " length. \n");
     }//if
-    if(checkBits(bits) == false){
-      throw new Exception("String bits must include 1s and 0s. \n");
-    }//if
-
+    
     //sets current to the start of the tree
     current = root;
 
@@ -87,6 +84,8 @@ public class BitTree {
           current.right = new BitTreeNode();
         }//if
         current = current.right;
+      } else {
+        System.err.println("Invalid input, only 0's or 1's allowed");
       }//if
     }//for
     
@@ -104,9 +103,6 @@ public class BitTree {
     if(bits.length() != size){
       throw new Exception("Invalid string, please input a string of " + size + " length. \n");
     }//if
-    if(checkBits(bits) == false){
-      throw new Exception("String bits must include 1s and 0s. \n");
-    }//if
 
     current = root;
 
@@ -116,6 +112,8 @@ public class BitTree {
         current = current.left;
       } else if(bits.charAt(i) == '1'){
         current = current.right;
+      } else {
+        System.err.println("invalid input, must be 0's or 1's");
       }//if
     }//for
 
@@ -181,25 +179,6 @@ public class BitTree {
       }//if
     }//while
   }//load
-
-/*------------------
- * Helper functions|
- * -----------------
- */
-
- /*
-  * checkBits(String bits)
-  checks if the string contains bits other than 0 or 1
-  */
-  public boolean checkBits(String bits){
-    for(int i = 0; i < (bits.length()-1); i++){
-      if((bits.charAt(i) != '0') || (bits.charAt(i) != '1')){
-        return false;
-      }//if
-    }//for
-
-    return true;
-  }//checkBits
 
 /*---------------------------
  * Inner class
